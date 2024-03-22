@@ -28,3 +28,17 @@ Overall, the `handle_connection` function uses a buffered reader to read lines r
 
 <img width="1021" alt="image" src="https://github.com/PascalPahlevi/advprog-module6/assets/143638456/51b738c7-641c-41e9-a9b2-1921f0b06e6c">
 
+## Milestone 4: Simulation of slow request
+```
+let (status_line, filename) = match &request_line[..] {
+        "GET / HTTP/1.1" => ("HTTP/1.1 200 OK", "hello.html"),
+        "GET /sleep HTTP/1.1" => {
+            thread::sleep(Duration::from_secs(5));
+            ("HTTP/1.1 200 OK", "hello.html")
+        }
+        _ => ("HTTP/1.1 404 NOT FOUND", "404.html"),
+    };
+```
+This newly added lines of code essentially gives us an idea on how it would be like when multiple people access the website on a single thread server. When the website is given a `/sleep` request, the browser gives out a sleep response of 5 seconds, simulating a slow load time.
+
+
