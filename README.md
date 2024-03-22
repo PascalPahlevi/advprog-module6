@@ -23,3 +23,8 @@ Overall, the `handle_connection` function uses a buffered reader to read lines r
 ## Milestone 2: Returning HTML
 
 <img width="1136" alt="commit2" src="https://github.com/PascalPahlevi/advprog-module6/assets/143638456/eb498c8c-7435-4b1d-aaf9-feeb6967cc0a">
+
+## Milestone 3: Validating request and selectively responding
+
+<img width="1021" alt="image" src="https://github.com/PascalPahlevi/advprog-module6/assets/143638456/51b738c7-641c-41e9-a9b2-1921f0b06e6c">
+
