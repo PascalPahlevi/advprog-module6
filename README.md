@@ -19,3 +19,7 @@ For this section, in order to fully understand the `handle_connection` function,
 8. `println!("Request: {:#?}", http_request);` - This line simply prints the collected HTTP request lines.
 
 Overall, the `handle_connection` function uses a buffered reader to read lines received from a TCP stream and prints out the resulted HTTP request lines when an empty line is finally encountered.
+
+## Milestone 2: Returning HTML
+
+<img width="1136" alt="commit2" src="https://github.com/PascalPahlevi/advprog-module6/assets/143638456/eb498c8c-7435-4b1d-aaf9-feeb6967cc0a">
