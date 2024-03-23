@@ -28,6 +28,24 @@ Overall, the `handle_connection` function uses a buffered reader to read lines r
 
 <img width="1021" alt="image" src="https://github.com/PascalPahlevi/advprog-module6/assets/143638456/51b738c7-641c-41e9-a9b2-1921f0b06e6c">
 
+```
+let (status_line, filename) = if request_line == "GET / HTTP/1.1" {
+        ("HTTP/1.1 200 OK", "hello.html")
+    } else {
+        ("HTTP/1.1 404 NOT FOUND", "404.html")
+    };`
+
+    let contents = fs::read_to_string(filename).unwrap();
+    let length = contents.len();
+
+    let response =
+        format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
+
+    stream.write_all(response.as_bytes()).unwrap();
+```
+
+The code above was used for this milestone where it essentially processes the initial HTTP request then determines the most suitable response according to its request by reading the contents of the associated file, ending it by formatting the HTTP response and writing it.
+
 ## Milestone 4: Simulation of slow request
 ```
 let (status_line, filename) = match &request_line[..] {
