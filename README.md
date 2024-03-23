@@ -43,4 +43,74 @@ This newly added lines of code essentially gives us an idea on how it would be l
 
 ## Milestone 5: Multithreaded Server
 
+In order to explain how the multithreading works, there a few blocks of code that would help in doing so.
+
+```
+use std::{
+    sync::{mpsc, Arc, Mutex},
+    thread,
+};
+```
+The block of code above imports a few things to help in setting up the multithreading. First, we have the 'mpsc' import which helps in message passing between theads. Afterwards we have the 'Arc' import which would be used for shared ownership betwen the threads. There is also the 'mutex' import for help in managing the mutable data. Finally, the 'thread' import is used to allow the ability to create threads itself.
+
+```
+pub struct ThreadPool {
+    workers: Vec<Worker>,
+    sender: mpsc::Sender<Job>,
+}
+```
+This block of code creates the struct 'Threadpool' which contains the vector of 'worker' with the use of a sender to send jobs to the workers/
+
+```
+impl ThreadPool {
+    pub fn new(size: usize) -> ThreadPool {
+        assert!(size > 0);
+
+        let (sender, receiver) = mpsc::channel();
+        let receiver = Arc::new(Mutex::new(receiver));
+
+        let mut workers = Vec::with_capacity(size);
+        for id in 0..size {
+            workers.push(Worker::new(id, Arc::clone(&receiver)));
+        }
+
+        ThreadPool { workers, sender }
+    }
+}
+```
+This block of code creates a new threadpool, with the size parameter indicating the needed amount of workers to be created. The 'mpsc::channel' is used to ensure the existence of a connection between the sender and the receiver, in this case between the main and worker thread.
+
+```
+pub fn execute<F>(&self, f: F)
+where
+    F: FnOnce() + Send + 'static,
+{
+    let job = Box::new(f);
+    self.sender.send(job).unwrap();
+}
+```
+This block of code works as a method in sending jobs to the threadpool where it will be executed. It will take a closure 'F' as an argument and sends it to the sender channel.
+
+```
+struct Worker {
+    id: usize,
+    thread: thread::JoinHandle<()>,
+}
+
+impl Worker {
+    fn new(id: usize, receiver: Arc<Mutex<mpsc::Receiver<Job>>>) -> Worker {
+        let thread = thread::spawn(move || loop {
+            let job = receiver.lock().unwrap().recv().unwrap();
+            println!("Worker {id} got a job; executing.");
+            job();
+        });
+        Worker { id, thread }
+    }
+}
+```
+In this block of code, the struct 'Worker' basically defines an individual worker in the threadpool. In the worker implementation, a new worker thread is created where it takes in an ID and receiver to retriver jobs from the sender channel. Aftewards, it continuously creates a new thread to execute and retrieve jobs.
+
+ 
+
+
 
